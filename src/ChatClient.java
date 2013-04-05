@@ -49,6 +49,10 @@ public class ChatClient extends UnicastRemoteObject implements IChatClient {
 					System.out.println("you cannot send message to youself");
 					continue;
 				}
+				else if( !server.clientExist(split[0]) && !text.equalsIgnoreCase("exit")) {
+					System.out.println("name wrong! no one to talk to");
+					continue;
+				}
 				int index = text.indexOf(" ");
 				final String msg = text.substring(index + 1);
 				if (!text.equalsIgnoreCase("exit")) {

@@ -48,9 +48,7 @@ public class ChatServer extends UnicastRemoteObject implements IChatServer {
 			e.printStackTrace();
 		}
 	}
-	public void SendMessage(IChatClient client, String message, String des) throws RemoteException {
-		boolean send = false;
-		
+	public void SendMessage(IChatClient client, String message, String des) throws RemoteException {		
 		int source = clients.indexOf(client);
 		int temp = client.getVector().get(source);
 		client.setVector(temp + 1, source);
@@ -62,7 +60,6 @@ public class ChatServer extends UnicastRemoteObject implements IChatServer {
 				try {
 					Thread.sleep((Math.abs(ran.nextInt())%8 + 3) * 1000);
 					clients.get(i).PrintMessage(client.getName() + ":" + message, v, source, true);
-					send = true;
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -70,7 +67,12 @@ public class ChatServer extends UnicastRemoteObject implements IChatServer {
 			else if (!clients.get(i).getName().equals(client.getName()))
 				clients.get(i).PrintMessage(client.getName() + ":" + message, v, source, false);
 		}
-		if (!send)
-			client.PrintMessage("name wrong! no one to talk to", null, 0, true);
+	}
+	@Override
+	public boolean clientExist(String name) throws RemoteException {
+		for (int i = 0; i < clients.size(); i++)
+			if (clients.get(i).getName().equals(name))
+				return true;
+		return false;
 	}
 }
