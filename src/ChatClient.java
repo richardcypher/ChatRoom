@@ -37,11 +37,25 @@ public class ChatClient extends UnicastRemoteObject implements IChatClient {
 			server.Add(this);
 			
 			String text;
+			@SuppressWarnings("resource")
 			Scanner scan = new Scanner(System.in);
 			do {
 				text = scan.nextLine();
 				final String[] split = text.split(" ");
-				if (split.length == 1 && !text.equalsIgnoreCase("exit")) {
+				if (split[0].equalsIgnoreCase("-showuser")) {
+					new Thread(new Runnable(){
+						public void run() {
+							try {
+								server.ShowUser(ChatClient.this);
+							} catch (RemoteException e) {
+								e.printStackTrace();
+							}
+						}
+					}).start();
+					continue;
+				}
+				
+				else if (split.length == 1 && !text.equalsIgnoreCase("exit")) {
 					System.out.println("The name of the buddy or the message is not specfied");
 					continue;
 				}
